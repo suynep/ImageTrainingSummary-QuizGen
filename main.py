@@ -20,3 +20,11 @@ async def app_view(request: Request):
         "app_page.html", 
         {"request": request}
     )
+
+@app.get("/app/summary")
+async def summary_view(request: Request):
+    pass
+
+@app.post("/parse")
+async def parse_link(request: Request):
+    pass

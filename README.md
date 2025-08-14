@@ -4,6 +4,10 @@ This repo contains the FastAPI web application for Image Training Summary & Quiz
 
 # Running & Developing
 
+## FYKI
+We are using a [FastAPI](https://fastapi.tiangolo.com/) and [MongoDB](https://www.mongodb.com/) stack, utilizing [Jinja2](https://jinja.palletsprojects.com/en/stable/) templating engine. All CSS is hand-written currently, with no library shenanigans of Tailwind or Bootstrap *(likely to change in the near future)*. 
+> Contributions are welcome **after** the Hackathon ends.
+
 ## using `uv` (recommended)
 If `uv` isn't installed, install it using:
 ### Linux/macOS

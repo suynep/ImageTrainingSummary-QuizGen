@@ -1,0 +1,531 @@
+<!-- NOT TO FOCUS ON THIS RN -->
+<!-- pachi implement garumla if needed -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f4a261, #e76f51, #e9c46a, #f4a261);
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Mosaic Background */
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(45deg, rgba(244, 162, 97, 0.8) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(233, 196, 106, 0.6) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(231, 111, 81, 0.7) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(244, 162, 97, 0.5) 75%);
+            background-size: 30px 30px, 30px 30px, 30px 30px, 30px 30px;
+            background-position: 0 0, 0 15px, 15px -15px, -15px 0px;
+            z-index: 1;
+        }
+
+        .main-content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(244, 162, 97, 0.4) 2px, transparent 2px),
+                radial-gradient(circle at 80% 70%, rgba(233, 196, 106, 0.3) 1px, transparent 1px),
+                radial-gradient(circle at 40% 80%, rgba(231, 111, 81, 0.5) 1.5px, transparent 1.5px);
+            background-size: 40px 40px, 60px 60px, 35px 35px;
+            z-index: 2;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, #1a5f3f, #2d8659, #1a5f3f);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%);
+            background-size: 20px 20px, 20px 20px;
+            background-position: 0 0, 0 10px;
+            z-index: 1;
+        }
+
+        .sidebar-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .logo-section {
+            margin-bottom: 3rem;
+        }
+
+        .logo-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+
+        .youtube-icon {
+            display: inline-block;
+            background: #ff0000;
+            color: white;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            margin-left: 0.5rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: auto;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #1a5f3f;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn.active {
+            background: rgba(244, 162, 97, 0.9);
+            color: white;
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .footer-text .heart {
+            color: #ff6b6b;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 2rem;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: rgba(32, 32, 32, 0.37);
+            border-radius: 32px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(6.2px);
+            -webkit-backdrop-filter: blur(6.2px);
+            border: 1px solid rgba(145, 145, 145, 0.3);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.03); /* Enlarges the button */
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .feature-dots {
+            color: rgba(255, 255, 255, 0.6);
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .feature-number {
+            color: #ff0909;
+        }
+
+        .feature-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .connection-line {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            width: 40px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 1px;
+        }
+
+        .connection-dot {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+        }
+
+        /* Mobile Hamburger */
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1000;
+            background: rgba(26, 95, 63, 0.9);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 5px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 15;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+                z-index: 20;
+                width: 280px;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-content {
+                padding: 5rem 2rem 2rem;
+                height: 100%;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .main-content {
+                width: 100%;
+                padding: 5rem 1rem 2rem;
+                min-height: 100vh;
+                background: linear-gradient(135deg, #f4a261, #e76f51, #e9c46a, #f4a261);
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .feature-title {
+                font-size: 1.5rem;
+            }
+
+            .mobile-overlay.active {
+                display: block;
+            }
+
+            /* Ensure background covers full height on mobile */
+            body {
+                min-height: 100vh;
+                background: linear-gradient(135deg, #f4a261, #e76f51, #e9c46a, #f4a261);
+                background-attachment: fixed;
+            }
+
+            .main-content {
+                background: inherit;
+            }
+
+            .logo-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .feature-card {
+                padding: 1rem;
+            }
+
+            .feature-title {
+                font-size: 1.3rem;
+            }
+
+            .feature-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="spinner"></div> Fetching Community Posts...
+    </div>
+
+    <!-- main container -->
+    <div class="container" id="container" style="display: none;">
+        <!-- Mobile Hamburger -->
+        <button class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <div class="logo-section">
+                    <h1 class="logo-title">
+                        YouTube<br>
+                        Video<span class="youtube-icon">▶</span><br>
+                        Summary
+                    </h1>
+                    <img src="{{ url_for('static', path='images/stroke_ultimatos.png') }}" alt="brush stroke" height="30" />
+                </div>
+
+                <nav class="nav-buttons">
+                    <button class="nav-btn" onclick="navigateTo('{{ url_for('landing_view') }}')">Home</button>
+                    <button class="nav-btn" onclick="navigateTo('{{ url_for('app_view') }}')">App</button>
+                    <button class="nav-btn active" onclick="navigateTo('{{ url_for('landing_view') }}')">Community</button>
+                    <button class="nav-btn" onclick="navigateTo('login')">Login</button>
+                </nav>
+
+                <div class="footer-text">
+                    developed with <span class="heart">❤️</span><br>
+                    <span style="opacity: 0.6;">© 2025 AI hackathon</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="feature-card">
+                    <div class="connection-line"></div>
+                    <div class="connection-dot"></div>
+                    <div class="feature-header">
+                        <span class="feature-dots">• • •</span>
+                        <img src="{{ url_for('static', path='images/stroke_title.png') }}" width="80" alt="feature stroke" style="margin-right: 1em;" />
+                        <h2 class="feature-title">Feature <span class="feature-number">1</span></h2>
+                    </div>
+                    <p class="feature-text">
+                        Lorem ipsum dolor sit amet consectetur. Laoreet volutpat donec
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="connection-line"></div>
+                    <div class="connection-dot"></div>
+                    <div class="feature-header">
+                        <span class="feature-dots">• • •</span>
+                        <img src="{{ url_for('static', path='images/stroke_title.png') }}" width="80" alt="feature stroke" style="margin-right: 1em;"/>
+                        <h2 class="feature-title">Feature <span class="feature-number">2</span></h2>
+                    </div>
+                    <p class="feature-text">
+                        Lorem ipsum dolor sit amet consectetur. Laoreet volutpat donec
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-dots">• • •</span>
+                        <img src="{{ url_for('static', path='images/stroke_title.png') }}" width="80" alt="feature stroke" style="margin-right: 1em;"/>
+                        <h2 class="feature-title">Feature <span class="feature-number">3</span></h2>
+                    </div>
+                    <p class="feature-text">
+                        Lorem ipsum dolor sit amet consectetur. Laoreet volutpat donec
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        async function loadPosts() {
+            // display: flex;
+            // height: 100vh;
+            // position: relative;
+            try {
+                const res = await fetch("/api/all-community-posts"); // <-- Separate endpoint for data
+                const data = await res.json();
+                
+                document.getElementById("container").display = "flex";
+                document.getElementById("container").height = "100vh";
+                document.getElementById("container").position = "relative";
+                document.getElementById("summary-text").textContent = JSON.stringify(data, null, 2);
+                document.getElementById("loading-overlay").style.display = "none";
+                document.getElementById("summary-content").style.display = "block";
+            } catch (err) {
+                document.getElementById("loading-overlay").textContent = "Error loading summary.";
+            }
+        }
+
+        loadPosts()
+
+        // Mobile Navigation
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('active');
+            mobileOverlay.classList.toggle('active');
+        });
+
+        mobileOverlay.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            sidebar.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+        });
+
+        // Navigation Functions
+        function navigateTo(page) {
+            console.log(`Navigating to ${page}`);
+            window.location.href=page;
+            // Close mobile menu if open
+            hamburger.classList.remove('active');
+            sidebar.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            
+            // Update active button
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Prevent background scroll issues on mobile
+        let touchStartY = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', e => {
+            const touchY = e.touches[0].clientY;
+            const touchDiff = touchStartY - touchY;
+            
+            // Prevent overscroll bounce
+            if (document.body.scrollTop === 0 && touchDiff < 0) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>

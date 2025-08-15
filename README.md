@@ -8,7 +8,31 @@ This repo contains the FastAPI web application for Image Training Summary & Quiz
 We are using a [FastAPI](https://fastapi.tiangolo.com/) and [MongoDB](https://www.mongodb.com/) stack, utilizing [Jinja2](https://jinja.palletsprojects.com/en/stable/) templating engine. All CSS is hand-written currently, with no library shenanigans of Tailwind or Bootstrap *(likely to change in the near future)*. 
 > Contributions are welcome **after** the Hackathon ends.
 
-## using `uv` (recommended)
+## Preliminary Setup of the Database -- MongoDB
+### Installation Guide for `MongoDB Community Edition`
+#### `Linux (Ubuntu 24.04.x)` guide 
+```bash
+sudo apt-get install gnupg curl
+
+curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+   --dearmor
+
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+
+sudo apt-get update
+
+sudo apt-get install -y mongodb-org
+
+sudo systemctl start mongod # start the daemon
+```
+
+#### `Windows` guide
+Follow this: [](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/)
+
+> अरु systemsको लागि आफै खोज लोल
+
+## Repo setup using `uv` (recommended)
 If `uv` isn't installed, install it using:
 ### Linux/macOS
 In your favorite [terminal](https://sw.kovidgoyal.net/kitty/) run:
@@ -32,7 +56,7 @@ uv add -r requirements.txt
 uv run fastapi run main.py
 ```
 
-## using `pip`
+## Repo setup using `pip`
 Run (in MinGW or bash):
 
 ```bash

@@ -18,11 +18,6 @@
             background: linear-gradient(135deg, #f4a261, #e76f51, #e9c46a, #f4a261);
         }
 
-        .container {
-            display: flex;
-            height: 100vh;
-            position: relative;
-        }
 
         /* Mosaic Background */
         .main-content::before {
@@ -209,6 +204,10 @@
 
         .quiz-section {
             margin-top: 1rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 2rem;
         }
 
         .question-text {
@@ -685,11 +684,39 @@
             }
         }
 
+        /* Full-page loading overlay */
+        #loading-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            z-index: 9999;
+        }
+        /* Spinner animation */
+        .spinner {
+            border: 4px solid #ddd;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
     </style>
 </head>
 <body>
-    <div class="container">
+    <div id="loading-overlay">
+        <div class="spinner"></div> Generating summary...
+    </div>
+    <div class="container" id="container" style="display:none;">
         <!-- Mobile Hamburger -->
         <button class="hamburger" id="hamburger">
             <span></span>
@@ -729,7 +756,8 @@
         <!-- Middle column: Video + Summary -->
         <div class="middle-column">
             <div class="video-container">
-                <iframe width="100%" height="100%" src="{{link}}" 
+                <iframe width="100%" height="100%" src="{{embed_link}}" 
+                    class="video-iframe"
                     title="YouTube video player" frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen></iframe>
@@ -740,7 +768,7 @@
                     <div class="card-header">
                         <h1 class="summarize-title">Summary</h1>
                     </div>
-                    <p style="color:white;">Summary content goes here...</p>
+                    <p id="summary-text" style="color:white;">Summary content goes here...</p>
                 </div>
             </div>
         </div>
@@ -755,22 +783,107 @@
 
             <div class="quiz-container">
                 <div class="quiz-section">
-                    <div class="quiz-question">
-                        <p class="question-text">1. What is the capital of France?</p>
-                        <div class="quiz-options">
-                            <button class="quiz-option" data-correct="false">Berlin</button>
-                            <button class="quiz-option" data-correct="false">Madrid</button>
-                            <button class="quiz-option" data-correct="true">Paris</button>
-                            <button class="quiz-option" data-correct="false">Rome</button>
-                        </div>
-                        <p class="feedback-text"></p>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Fetching content from api endpoints
+        async function loadSummary() {
+            try {
+                const res = await fetch("/app/summary-data"); // <-- Separate endpoint for data
+                const data = await res.json();
+                
+                document.getElementById("loading-overlay").style.display = "none";
+                
+                document.getElementById("container").style.display = "grid";
+                document.getElementById("container").style.gridTemplateColumns = "300px 2fr 1.2fr"
+                document.getElementById("container").style.height = "100vh";
+                document.getElementById("container").style.width = "100%";
+
+                document.querySelector(".video-iframe").src = data.embed_link;
+
+                const quizSection = document.querySelector(".quiz-section");
+                
+                for (const item of data.questions) {
+                    // Create parent div
+                    const quizQuestion = document.createElement("div");
+                    quizQuestion.className = "quiz-question";
+                    // Create question text
+                    const questionText = document.createElement("p");
+                    questionText.className = "question-text";
+                    questionText.textContent = "Q. " + item.question;
+                    quizQuestion.appendChild(questionText);
+
+                    const quizAnswer = item.answer;
+
+                    // Create quiz-options container
+                    const quizOptions = document.createElement("div");
+                    
+                    quizOptions.className = "quiz-options";
+
+                    // Function to create a button option
+                    function createOption(text, isCorrect) {
+                        const btn = document.createElement("button");
+                        btn.className = "quiz-option";
+                        btn.setAttribute("data-correct", isCorrect);
+                        btn.textContent = text;
+
+                        // Attach click event immediately
+                        btn.addEventListener('click', function () {
+                            const parent = btn.closest('.quiz-question');
+                            const feedback = parent.querySelector('.feedback-text');
+                        
+                            // Reset all buttons
+                            parent.querySelectorAll('.quiz-option').forEach(b => {
+                                b.classList.remove('correct', 'wrong');
+                            });
+                        
+                            if (btn.dataset.correct === "true") {
+                                btn.classList.add('correct');
+                                feedback.textContent = "✅ Correct!";
+                                feedback.style.color = "#2d8659";
+                            } else {
+                                btn.classList.add('wrong');
+                                feedback.textContent = "❌ Wrong! Try again.";
+                                feedback.style.color = "#e76f51";
+                            }
+                        });
+                    
+                        return btn;
+                    }
+                    
+                    console.log(item.answer_choices);
+
+                    // Add the four options
+                    for (const option of item.answer_choices) {
+                        console.log(option)
+                        if (option == quizAnswer) {
+                            quizOptions.appendChild(createOption(option, "true"));
+                        } else {
+                            quizOptions.appendChild(createOption(option, "false"));
+                        }
+                    }
+
+                    quizQuestion.appendChild(quizOptions);
+
+                    // Create feedback text
+                    const feedbackText = document.createElement("p");
+                    feedbackText.className = "feedback-text";
+                    quizQuestion.appendChild(feedbackText);
+
+                    quizSection.appendChild(quizQuestion);
+                }
+
+            } catch (err) {
+                document.getElementById("loading-overlay").textContent = "Error loading summary.";
+            }
+        }
+
+        // Run when page loads
+        loadSummary();
+
         // Mobile Navigation
         const hamburger = document.getElementById('hamburger');
         const sidebar = document.getElementById('sidebar');

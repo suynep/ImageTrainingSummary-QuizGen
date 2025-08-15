@@ -11,5 +11,6 @@ dependencies = [
     "jinja2>=3.1.6",
     "pydantic>=2.11.7",
     "pydotenv>=0.0.7",
+    "pymongo>=4.14.0",
     "youtube-transcript-api>=1.2.2",
 ]

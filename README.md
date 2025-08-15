@@ -28,7 +28,7 @@ sudo systemctl start mongod # start the daemon
 ```
 
 #### `Windows` guide
-Follow this: [](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/)
+Follow this: [Windows MongoDB Install Guide](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/)
 
 > अरु systemsको लागि आफै खोज लोल
 

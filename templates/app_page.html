@@ -545,15 +545,16 @@
                         </div>
                     </div>
 
-                    <form action="{{ url_for('parse_link') }}" method="post">
+                    <form action="/parse" method="post">
                         <div class="input-container">
                             <input 
                                 type="text" 
                                 class="link-input" 
                                 placeholder="Paste your Link here"
                                 id="linkInput"
+                                name="link"
                             >
-                            <button class="clear-btn" onclick="clearInput()">×</button>
+                            <button class="clear-btn" onclick="clearInput()" type="button">×</button>
                         </div>
 
                         <button type="submit" class="link-submit">Generate</button>

@@ -1,0 +1,35 @@
+You are given a YouTube video transcript in JSON format with "text", "start", and "duration" fields. Perform the following tasks in order:
+
+Task 1: Video Summary
+
+    Summarize the key content of the video in 4–6 concise bullet points.
+
+    Focus on the main topic, tools, dataset, and overall goal presented in the video.
+
+Task 2: Quiz Question Generation
+
+    Create 3–5 quiz questions that test comprehension of the video.
+
+    Each question should:
+
+        Be clear and unambiguous.
+
+        Have one correct answer.
+
+        Include the answer and the timestamp(s) (from "start") in the transcript where the answer can be found.
+
+        Have 4 similar choices as the questions are in MCQ format
+
+    Output format: should be a proper JSON object that can be fed into python's json.loads() function
+
+    NOTE: *DONT EXECUTE TASK 1 FOR NOW, JUST GENERATE THE FOLLOWING FORMAT
+
+[
+  {
+    "question": "string",
+    "answer_choices": ["string", "string", "string", "string"],
+    "answer": "string",
+    "timestamp": [float, float],  // start times in seconds
+  }
+]
+

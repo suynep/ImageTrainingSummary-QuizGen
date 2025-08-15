@@ -29,7 +29,7 @@ Run (in MinGW or bash):
 git clone https://github.com/suynep/ImageTrainingSummary-QuizGen
 cd ImageTrainingSummary-QuizGen/
 uv add -r requirements.txt
-uv run main.py
+uv run fastapi run main.py
 ```
 
 ## using `pip`
@@ -41,7 +41,7 @@ cd ImageTrainingSummary-QuizGen/
 python3 -m virtualenv .venv
 source ./.venv/bin/activate
 pip install -r requirements.txt
-python3 main.py
+fastapi run main.py
 ```
 
 # Contributing

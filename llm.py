@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from google import genai
 from google.genai import types
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api.proxies import WebshareProxyConfig
 
 load_dotenv()
 
@@ -17,7 +18,13 @@ with open('prompt.txt', 'r') as f:
     PROMPT = f.read()
 
 client = genai.Client(api_key=GEMINI_API_KEY)
-ytt_api = YouTubeTranscriptApi()
+ytt_api = YouTubeTranscriptApi(
+    # The following credentials are tied to my WebShare Account (WILL BE REMOVED POST-HACKATHON)
+    proxy_config=WebshareProxyConfig(
+        proxy_username="mfrlnouc",
+        proxy_password="6hvumoogmmj0",
+    )
+)
 
 templates = Jinja2Templates(directory="templates")
 

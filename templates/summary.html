@@ -277,7 +277,7 @@
             color: white;
             font-size: 3rem;
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin-bottom: 0.2rem;
             position: relative;
         }
 
@@ -768,7 +768,7 @@
                     <div class="card-header">
                         <h1 class="summarize-title">Summary</h1>
                     </div>
-                    <p id="summary-text" style="color:white;">Summary content goes here...</p>
+                    <div id="summary-text" style="color:white;">Summary content goes here...</div>
                 </div>
             </div>
         </div>
@@ -803,6 +803,9 @@
                 document.getElementById("container").style.width = "100%";
 
                 document.querySelector(".video-iframe").src = data.embed_link;
+
+                document.getElementById("summary-text").innerHTML = data.summary;
+                console.log(data.summary);
 
                 const quizSection = document.querySelector(".quiz-section");
                 

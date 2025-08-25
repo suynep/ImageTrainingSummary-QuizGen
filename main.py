@@ -11,6 +11,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from helpers import validate_link
 from llm import generate_custom_json, fetch_transcript_text
 from uuid import uuid4
+import markdown
 
 app = FastAPI()
 SECRET_KEY = "5a04ed44-ca47-4e07-a499-46c8886b618d"  # Change in prod
@@ -56,7 +57,7 @@ async def summary_data(request: Request):
     if not embed_link or not video_id:
         return {"message": "No Link set in the cookie"}
 
-    res = find_data_by_id(video_id) # check if the video has already been LLM-ized
+    res = find_data_by_id(video_id) # check if the video has already been LLM-ized and is stored in the MongoDB
 
     if not res:
         transcript_json = await fetch_transcript_text(video_id)
@@ -69,7 +70,8 @@ async def summary_data(request: Request):
         insert_one_to_db({"embed_link": embed_link, "questions": questions, "summary": summary, "_id": video_id})
 
         # Return JSON instead of HTML
-        return {"embed_link": embed_link, "questions": questions}
+        print(markdown.markdown(summary))
+        return {"embed_link": embed_link, "questions": questions, "summary": markdown.markdown(summary)}
     else:
         return res
 

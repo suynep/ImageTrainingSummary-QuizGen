@@ -18,11 +18,29 @@ with open('prompt.txt', 'r') as f:
     PROMPT = f.read()
 
 client = genai.Client(api_key=GEMINI_API_KEY)
+
+
+# Ports for the webshare account
+ports = [
+    6114,
+    6540,
+    6014,
+    6543,
+    6641,
+    6257,
+    5536,
+    6837,
+    6661,
+    6593,
+]
+
+
 ytt_api = YouTubeTranscriptApi(
     # The following credentials are tied to my WebShare Account (WILL BE REMOVED POST-HACKATHON)
     proxy_config=WebshareProxyConfig(
-        proxy_username="mfrlnouc",
+        proxy_username="mfrlnouc-rotate",
         proxy_password="6hvumoogmmj0",
+        proxy_port=80,
     )
 )
 

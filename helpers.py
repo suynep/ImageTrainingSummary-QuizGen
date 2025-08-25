@@ -1,6 +1,5 @@
 import re
 
-
 def validate_link(link: str) -> str:
     # Simple YouTube URL pattern
     yt_pattern = r"^(https?://)?(www\.)?(youtube\.com|youtu\.be)/.+$"

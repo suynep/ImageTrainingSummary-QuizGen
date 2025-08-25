@@ -13,7 +13,7 @@ from llm import generate_custom_json, fetch_transcript_text
 from uuid import uuid4
 
 app = FastAPI()
-SECRET_KEY = "5a04ed44-ca47-4e07-a499-46c8886b618d"  # DON'T EXPOSE IN PROD
+SECRET_KEY = "5a04ed44-ca47-4e07-a499-46c8886b618d"  # Change in prod
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")

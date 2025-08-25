@@ -20,7 +20,7 @@ Task 2: Quiz Question Generation
 
         Have 4 similar choices as the questions are in MCQ format
 
-    **NOTE**: The summary should NOT contain anything pertaining to "advertisements" or "sponsorships". ALSO, the summary should be in a concise (3 sentence) PARAGRAPH; not bullet points.
+    **NOTE**: The summary should NOT contain anything pertaining to "advertisements" or "sponsorships". The summary should be in markdown formatted bullet points, with 3 to 4 concise points, each point not longer than a sentence. Highlight important key-words/phrases in the summary using Markdown's bold/italic/code formats, whatever's applicable.
 
     Output format: should be a proper JSON object that can be fed into python's json.loads() function, adhere to the following format:
 

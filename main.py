@@ -73,7 +73,13 @@ async def summary_data(request: Request):
         print(markdown.markdown(summary))
         return {"embed_link": embed_link, "questions": questions, "summary": markdown.markdown(summary)}
     else:
-        return res
+        data = {
+            "embed_link": res['embed_link'], 
+            "questions": res['questions'], 
+            "summary": markdown.markdown(res['summary']), 
+            "_id": res['_id'],
+        }
+        return data 
 
 
 @app.post("/parse")

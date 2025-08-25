@@ -7,7 +7,8 @@ from fastapi.templating import Jinja2Templates
 from google import genai
 from google.genai import types
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api.proxies import WebshareProxyConfig
+from youtube_transcript_api.proxies import GenericProxyConfig
+# from youtube_transcript_api.proxies import WebshareProxyConfig
 
 load_dotenv()
 
@@ -20,27 +21,14 @@ with open('prompt.txt', 'r') as f:
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 
-# Ports for the webshare account
-ports = [
-    6114,
-    6540,
-    6014,
-    6543,
-    6641,
-    6257,
-    5536,
-    6837,
-    6661,
-    6593,
-]
-
+NIMBLE_USERNAME = os.environ.get("NIMBLE_USERNAME")
+NIMBLE_PASS = os.environ.get("NIMBLE_PASS")
+NIMBLE_PROXY = f"http://{NIMBLE_USERNAME}:{NIMBLE_PASS}@ip.nimbleway.com:7000"
 
 ytt_api = YouTubeTranscriptApi(
-    # The following credentials are tied to my WebShare Account (WILL BE REMOVED POST-HACKATHON)
-    proxy_config=WebshareProxyConfig(
-        proxy_username="mfrlnouc-rotate",
-        proxy_password="6hvumoogmmj0",
-        proxy_port=80,
+    # Use the IP proxy sparingly (Usage limits are imposed in the free plan)
+    proxy_config=GenericProxyConfig(
+        http_url=NIMBLE_PROXY,
     )
 )
 

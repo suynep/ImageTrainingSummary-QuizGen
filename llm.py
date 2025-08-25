@@ -1,4 +1,5 @@
 import os
+import requests
 import json
 import asyncio
 from dotenv import load_dotenv
@@ -20,16 +21,17 @@ with open('prompt.txt', 'r') as f:
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
+SCRAPING_DOG_API = os.environ.get("SCRAPINGDOG_SUY_KEY")
 
-NIMBLE_USERNAME = os.environ.get("NIMBLE_USERNAME")
-NIMBLE_PASS = os.environ.get("NIMBLE_PASS")
-NIMBLE_PROXY = f"http://{NIMBLE_USERNAME}:{NIMBLE_PASS}@ip.nimbleway.com:7000"
+# NIMBLE_USERNAME = os.environ.get("NIMBLE_USERNAME")
+# NIMBLE_PASS = os.environ.get("NIMBLE_PASS")
+# NIMBLE_PROXY = f"http://{NIMBLE_USERNAME}:{NIMBLE_PASS}@ip.nimbleway.com:7000"
 
 ytt_api = YouTubeTranscriptApi(
     # Use the IP proxy sparingly (Usage limits are imposed in the free plan)
-    proxy_config=GenericProxyConfig(
-        http_url=NIMBLE_PROXY,
-    )
+    # proxy_config=GenericProxyConfig(
+    #     http_url=NIMBLE_PROXY,
+    # )
 )
 
 templates = Jinja2Templates(directory="templates")
@@ -40,12 +42,16 @@ templates = Jinja2Templates(directory="templates")
 
 def _fetch_transcript_text(video_id: str) -> str:
     """Blocking transcript fetch, offloaded to thread in async context."""
-    fetched = ytt_api.fetch(video_id)
-    data = []
-    for snippet in fetched:
-        data.append({"text": snippet.text, "start": snippet.start, "duration": snippet.duration})
 
-    return json.dumps(data)
+    api_url = f"https://api.scrapingdog.com/youtube/transcripts?v={video_id}&api_key={SCRAPING_DOG_API}"
+    fetched = requests.get(api_url).json()
+    # fetched = ytt_api.fetch(video_id)
+    # data = []
+    # for snippet in fetched:
+    #     data.append({"text": snippet.text, "start": snippet.start, "duration": snippet.duration})
+
+    # return json.dumps(data)
+    return json.dumps(list(dict(fetched)['transcripts']))
 
 def _generate_custom_json(data: str) -> str:
     """Blocking Gemini call, offloaded to thread in async context."""

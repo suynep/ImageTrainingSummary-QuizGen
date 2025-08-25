@@ -38,7 +38,10 @@ async def summary_page(request: Request):
 # 👇👇👇👇👇👇 YO IMPLEMENT PACHIIIIII!!!!! (if needed lol)
 # @app.get("/community")
 # async def community_view(request: Request):
-#     return templates.TemplateResponse("community.html", {"request": request})
+#     return templates.TemplateResponse("community.html", {"request": request})    "question": "string",
+    # "answer_choices": ["string", "string", "string", "string"],
+    # "answer": "string",
+    # "timestamp": [float, float],  // start times in seconds
 
 # @app.get("/api/all-community-posts")
 # async def community_data(request: Request):
@@ -60,9 +63,10 @@ async def summary_data(request: Request):
         llm_res = await generate_custom_json(transcript_json)
         llm_res = json.loads(llm_res)
 
-        questions = json.loads(llm_res['candidates'][0]['content']['parts'][0]['text'])
+        questions = json.loads(llm_res['candidates'][0]['content']['parts'][0]['text'])['questions']
+        summary = json.loads(llm_res['candidates'][0]['content']['parts'][0]['text'])['summary']
 
-        insert_one_to_db({"embed_link": embed_link, "questions": questions, "_id": video_id})
+        insert_one_to_db({"embed_link": embed_link, "questions": questions, "summary": summary, "_id": video_id})
 
         # Return JSON instead of HTML
         return {"embed_link": embed_link, "questions": questions}

@@ -20,16 +20,26 @@ Task 2: Quiz Question Generation
 
         Have 4 similar choices as the questions are in MCQ format
 
-    Output format: should be a proper JSON object that can be fed into python's json.loads() function
+    **NOTE**: The summary should NOT contain anything pertaining to "advertisements" or "sponsorships"
 
-    NOTE: *DONT EXECUTE TASK 1 FOR NOW, JUST GENERATE THE FOLLOWING FORMAT
+    Output format: should be a proper JSON object that can be fed into python's json.loads() function, adhere to the following format:
 
-[
-  {
+
+{
+  "summary": "<summary_text>",
+  "questions": [{
     "question": "string",
     "answer_choices": ["string", "string", "string", "string"],
     "answer": "string",
     "timestamp": [float, float],  // start times in seconds
-  }
-]
+    },
+    {
+      "question": "string",
+      "answer_choices": ["string", "string", "string", "string"],
+      "answer": "string",
+      "timestamp": [float, float],  // start times in seconds
+    },
+    ...
+  ]
+}
 

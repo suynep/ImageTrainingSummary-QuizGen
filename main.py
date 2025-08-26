@@ -2,9 +2,10 @@
 
 import json
 from db import insert_one_to_db, find_data_by_id, get_all
+from auth_db import create_user, verify_user, get_user_by_id
 from urllib.parse import urlparse, parse_qs
-from fastapi import FastAPI, Request, Form, Response
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, Request, Form, Response, HTTPException
+from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
@@ -23,19 +24,73 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def landing_view(request: Request):
-
-    return templates.TemplateResponse("index.html", {"request": request})
+    user = None
+    if "user_id" in request.session:
+        user = get_user_by_id(request.session["user_id"])
+    
+    return templates.TemplateResponse("index.html", {"request": request, "user": user})
 
 
 @app.get("/app")
 async def app_view(request: Request):
-    return templates.TemplateResponse("app_page.html", {"request": request})
+    user = None
+    if "user_id" in request.session:
+        user = get_user_by_id(request.session["user_id"])
+    
+    return templates.TemplateResponse("app_page.html", {"request": request, "user": user})
 
 
 @app.get("/summary-page")
 async def summary_page(request: Request):
     """Serves HTML immediately"""
-    return templates.TemplateResponse("summary.html", {"request": request})
+    user = None
+    if "user_id" in request.session:
+        user = get_user_by_id(request.session["user_id"])
+    
+    return templates.TemplateResponse("summary.html", {"request": request, "user": user})
+
+
+@app.post("/api/register")
+async def register_user(request: Request, username: str = Form(...), email: str = Form(...), password: str = Form(...)):
+    """Register a new user"""
+    success, message = create_user(username, email, password)
+    
+    if success:
+        return JSONResponse({"success": True, "message": message})
+    else:
+        return JSONResponse({"success": False, "message": message}, status_code=400)
+
+
+@app.post("/api/login")
+async def login_user(request: Request, username: str = Form(...), password: str = Form(...)):
+    """Login user"""
+    success, user_data, message = verify_user(username, password)
+    
+    if success and user_data:
+        request.session["user_id"] = user_data["id"]
+        request.session["username"] = user_data["username"]
+        return JSONResponse({"success": True, "message": message, "user": user_data})
+    else:
+        return JSONResponse({"success": False, "message": message}, status_code=401)
+
+
+@app.post("/api/logout")
+async def logout_user(request: Request):
+    """Logout user"""
+    request.session.clear()
+    return JSONResponse({"success": True, "message": "Logged out successfully"})
+
+
+@app.get("/api/user")
+async def get_current_user(request: Request):
+    """Get current user information"""
+    if "user_id" in request.session:
+        user = get_user_by_id(request.session["user_id"])
+        if user:
+            return JSONResponse({"success": True, "user": user})
+    
+    return JSONResponse({"success": False, "user": None})
+
 
 # 👇👇👇👇👇👇 YO IMPLEMENT PACHIIIIII!!!!! (if needed lol)
 # @app.get("/community")
@@ -101,7 +156,7 @@ async def parse_link(request: Request, link: str = Form(...)):
         # NOTE: The following parsing mechanism currently works ONLY FOR
         #       the video links copied from browser URL, and NOT FOR those
         #       copied using youtube's SHARE feature (path parameter parsing is
-        #       required for this) (To Be Done)
+        #       required for this) (To Be Done) (To Be Done)
         vq = parse_qs(urlparse(link).query).get("v", [""])[0]
         if vq == '':
             vq = urlparse(link).path.lstrip('/') # rudimentary implementation; IMPROVE if possible

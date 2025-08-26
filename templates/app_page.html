@@ -247,6 +247,170 @@
         .footer-text .heart {
             color: #e74c3c;
         }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .username {
+            color: var(--jeans);
+            font-weight: 600;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fb 100%);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: modalSlideIn 0.3s ease-out;
+            border: 1px solid #e6e8f0;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--jeans);
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--jeans);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e6e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: white;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--jeans-light);
+            box-shadow: 0 0 0 3px rgba(35, 45, 92, 0.1);
+        }
+        
+        .form-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--jeans-light) 0%, var(--jeans-lighter) 100%);
+            color: white;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(35, 45, 92, 0.2);
+        }
+        
+        .form-submit:active {
+            transform: translateY(0);
+        }
+        
+        .modal-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .modal-link {
+            color: var(--jeans-light);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .modal-link:hover {
+            color: var(--jeans);
+        }
+        
+        .close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .close:hover {
+            color: var(--jeans);
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border: 1px solid #fcc;
+        }
+        
+        .success-message {
+            background: #efe;
+            color: #363;
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border: 1px solid #cfc;
+        }
         /* Responsive */
         @media (max-width: 900px) {
             .nav-bar { padding: 0 1rem; }
@@ -268,9 +432,74 @@
         <div class="nav-buttons">
             <button class="nav-btn" onclick="navigateTo('{{ url_for('landing_view') }}')">Home</button>
             <button class="nav-btn active" onclick="navigateTo('{{ url_for('app_view') }}')">App</button>
-            <button class="nav-btn" onclick="navigateTo('login')">Login</button>
+            {% if user %}
+                <div class="user-info">
+                    <span class="username">Welcome, {{ user.username }}!</span>
+                    <button class="nav-btn" onclick="logout()">Logout</button>
+                </div>
+            {% else %}
+                <button class="nav-btn" onclick="showLoginModal()">Login</button>
+            {% endif %}
         </div>
     </nav>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title">Welcome Back</h2>
+                <p class="modal-subtitle">Sign in to your account</p>
+            </div>
+            <div id="loginError" class="error-message" style="display: none;"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-input" required>
+                </div>
+                <button type="submit" class="form-submit">Sign In</button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a class="modal-link" onclick="showRegisterModal()">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title">Create Account</h2>
+                <p class="modal-subtitle">Join us today</p>
+            </div>
+            <div id="registerError" class="error-message" style="display: none;"></div>
+            <div id="registerSuccess" class="success-message" style="display: none;"></div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="registerUsername">Username</label>
+                    <input type="text" id="registerUsername" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" class="form-input" required>
+                </div>
+                <button type="submit" class="form-submit">Create Account</button>
+            </form>
+            <div class="modal-footer">
+                <p>Already have an account? <a class="modal-link" onclick="showLoginModal()">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
     <main class="app-main-content">
         <div class="app-container">
             <div class="card-header">
@@ -310,6 +539,127 @@
         </div>
     </main>
     <script>
+        // Modal functions
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('registerModal').style.display = 'none';
+            clearMessages();
+        }
+
+        function showRegisterModal() {
+            document.getElementById('registerModal').style.display = 'block';
+            document.getElementById('loginModal').style.display = 'none';
+            clearMessages();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            clearMessages();
+        }
+
+        function clearMessages() {
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('registerError').style.display = 'none';
+            document.getElementById('registerSuccess').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                clearMessages();
+            }
+        }
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+                
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Reload page to update navigation
+                    window.location.reload();
+                } else {
+                    document.getElementById('loginError').textContent = result.message;
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('loginError').textContent = 'An error occurred. Please try again.';
+                document.getElementById('loginError').style.display = 'block';
+            }
+        });
+
+        // Register form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('email', email);
+                formData.append('password', password);
+                
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('registerSuccess').textContent = result.message;
+                    document.getElementById('registerSuccess').style.display = 'block';
+                    // Clear form
+                    document.getElementById('registerForm').reset();
+                    // Switch to login modal after 2 seconds
+                    setTimeout(() => {
+                        showLoginModal();
+                    }, 2000);
+                } else {
+                    document.getElementById('registerError').textContent = result.message;
+                    document.getElementById('registerError').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('registerError').textContent = 'An error occurred. Please try again.';
+                document.getElementById('registerError').style.display = 'block';
+            }
+        });
+
+        // Logout function
+        async function logout() {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
         function navigateTo(page) {
             window.location.href=page;
             document.querySelectorAll('.nav-btn').forEach(btn => {

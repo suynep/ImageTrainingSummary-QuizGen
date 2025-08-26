@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Video Summary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lily+Script+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         :root {
             --jeans: #1a224a;
@@ -109,37 +113,36 @@
             margin-bottom: 2.5rem;
             width: 100%;
         }
-
+        /* filepath: [index.html](http://_vscodecontentref_/0) */
         .get-started-btn {
-            background-color:#ffa799;
-            background-image:
-            radial-gradient(at 53% 34%, hsla(59,72%,71%,1) 80px, transparent 50%),
-            radial-gradient(at 33% 96%, hsla(133,99%,69%,1) 120px, transparent 50%),
-            radial-gradient(at 17% 32%, hsla(73,69%,71%,1) 100px, transparent 50%),
-            radial-gradient(at 6% 51%, hsla(340,74%,75%,1) 90px, transparent 50%),
-            radial-gradient(at 81% 83%, hsla(209,74%,74%,1) 110px, transparent 50%),
-            radial-gradient(at 81% 38%, hsla(13,94%,65%,1) 90px, transparent 50%),
-            radial-gradient(at 89% 33%, hsla(4,76%,61%,1) 80px, transparent 50%);
-            background-blend-mode: screen;
-            color: var(--jeans);
+            font-family: "Lily Script One", system-ui;
+            background: url("{{ url_for('static', path='images/btn-bg.png') }}") no-repeat scroll 0 0 transparent;
+            background-size: cover;
+            color: rgb(255, 255, 255);
             border: none;
             border-radius: 2em;
-            box-shadow: 0 2px 12px 0 rgba(26,34,74,0.08);
+            box-shadow: 10px 10px 3px 0 rgba(26,34,74,0.08);
             padding: 0.7em 2.5em;
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s, color 0.2s, transform 0.18s;
-            font-size: 2em;
-
-        }        
-
-        .get-started-btn:hover {
-            background: #24223c;
-            background-color: linear-gradient(90deg, rgb(4, 1, 67) 0%, rgb(4, 4, 104) 35%, rgb(1, 41, 49) 100%);
+            font-size: 2.5em;
         }
 
+        .get-started-btn:hover {
+            background-image: url("{{ url_for('static', path='images/btn-bg.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.92);
+            color: #fff;
+            transform: scale(1.04);
+        }
         .feature-card {
             /* background: var(--card-bg); */
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.5em;
             background: #ffffff;
             background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgb(207, 255, 225) 50%, rgb(255, 253, 227) 100%);
             border-radius: 1rem;
@@ -173,6 +176,8 @@
             font-weight: 600;
             width: 100%;
         }
+        .features-row { position: relative; } /* anchor for absolute positioning */
+
 
         .feature-desc-area {
             margin-top: 2.5rem;
@@ -272,6 +277,7 @@
             overflow: hidden;
         }
         .hello-namaste .lexi {
+            font-family: "Lily Script One", system-ui;
             display: inline-block;
             min-width: 500px;
             position: relative;
@@ -507,13 +513,17 @@
         <div class="features-row">
             <div class="feature-card" data-feature="1">
                 <span class="feature-title">Multiple Choice Quizzes</span>
+                <i class="fa fa-graduation-cap" aria-hidden="true"></i>
             </div>
             <div class="feature-card" data-feature="2">
                 <span class="feature-title">3-Sentence Summaries</span>
+                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
             </div>
             <div class="feature-card" data-feature="3">
                 <span class="feature-title">Classroom Ready</span>
+                <i class="fa fa-university" aria-hidden="true"></i>
             </div>
+
         </div>
 
         <div>

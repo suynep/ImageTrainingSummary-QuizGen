@@ -88,15 +88,25 @@
 
         /* Main layout */
         .app-main-content {
+            background-color:hsla(83,0%,100%,1);
+            background-image:
+            radial-gradient(at 75% 54%, hsla(202,67%,78%,1) 0px, transparent 50%),
+            radial-gradient(at 88% 40%, hsla(252,61%,70%,1) 0px, transparent 50%),
+            radial-gradient(at 41% 63%, hsla(233,76%,60%,1) 0px, transparent 50%),
+            radial-gradient(at 98% 98%, rgb(142, 255, 180) 0px, transparent 50%),
+            radial-gradient(at 46% 38%, hsla(347,65%,65%,1) 0px, transparent 50%),
+            radial-gradient(at 69% 56%, hsla(226,79%,61%,1) 0px, transparent 50%),
+            radial-gradient(at 40% 31%, hsla(253,75%,70%,1) 0px, transparent 50%);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             min-height: calc(100vh - 64px);
             width: 100vw;
-            background: var(--white-soft);
         }
         .app-container {
+            background: #ffffff;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgb(207, 255, 225) 50%, rgb(255, 253, 227) 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -105,7 +115,6 @@
             max-width: 1000px;
             margin: 3.5rem auto 0 auto;
             padding: 2rem 1.5rem;
-            background: var(--card-bg);
             border-radius: 1.2rem;
             box-shadow: 0 2px 12px 0 rgba(26,34,74,0.04);
         }

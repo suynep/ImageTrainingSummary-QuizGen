@@ -224,5 +224,5 @@ def generate_quiz_pdf(questions):
   
   date_time = datetime.now()
 
-  HTML(string=quiz_html).write_pdf(f"pdfs/quiz_worksheet-{date_time}.pdf")
-  HTML(string=answer_html).write_pdf(f"pdfs/answer_book-{date_time}.pdf")
+  HTML(string=quiz_html).write_pdf(os.path.join("pdfs", f"quiz_worksheet-{date_time}.pdf"))
+  HTML(string=answer_html).write_pdf(os.path.join("pdfs", f"answer_book-{date_time}.pdf"))

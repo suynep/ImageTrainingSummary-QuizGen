@@ -19,6 +19,20 @@ Task 2: Quiz Question Generation
         Include the answer and the timestamp(s) (from "start") in the transcript where the answer can be found.
 
         Have 4 similar choices as the questions are in MCQ format
+Task 3: Flash Card Generation
+
+    Generate 4-6 flashcards (depending on content length and relevance) that help recall the key points/concepts mentioned in the video.
+    
+    Each flashcard should have:
+      
+      - concise front side idea/concept (a single sentence or two (only if necessary; try limiting to one), NO BULLET POINTS)
+
+      - max 5 words answer/key in the back side
+      
+      - should NOT include anything pertaining to advertisement/sponsorship message
+
+      - should only include concepts that are highly relevant and unmissable
+
 
     **NOTE**: The summary should NOT contain anything pertaining to "advertisements" or "sponsorships". The summary should be in markdown formatted bullet points, with 3 to 4 concise points, each point not longer than a sentence. Highlight important key-words/phrases in the summary using Markdown's bold/italic/code formats, whatever's applicable.
 
@@ -40,6 +54,19 @@ Task 2: Quiz Question Generation
       "timestamp": [float, float],  // start times in seconds
     },
     ...
-  ]
+  ],
+  "flashcards": [
+    {
+      "frontside": "string",
+      "backside": "string",
+      "timestamp": [float, float],
+    },
+    {
+      "frontside": "string",
+      "backside": "string",
+      "timestamp": [float, float],
+    },
+    ...
+  ],
 }
 

@@ -5,675 +5,377 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Video Summary - Summary</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --jeans: #1a224a;
+            --jeans-light: #232d5c;
+            --jeans-lighter: #2e3970;
+            --white: #fff;
+            --white-soft: #f7f8fa;
+            --accent: #e74c3c;
+            --card-bg: #f8f9fb;
+            --blur-bg: rgba(26,34,74,0.08);
         }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(135deg, #f4a261, #e76f51, #e9c46a, #f4a261);
+            min-height: 100vh;
+            background: var(--white-soft);
+            color: var(--jeans);
         }
-
-
-        /* Mosaic Background */
-        .main-content::before {
-            content: '';
-            position: absolute;
+        /* Navbar */
+        .nav-bar {
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(45deg, rgba(244, 162, 97, 0.8) 25%, transparent 25%),
-                linear-gradient(-45deg, rgba(233, 196, 106, 0.6) 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, rgba(231, 111, 81, 0.7) 75%),
-                linear-gradient(-45deg, transparent 75%, rgba(244, 162, 97, 0.5) 75%);
-            background-size: 30px 30px, 30px 30px, 30px 30px, 30px 30px;
-            background-position: 0 0, 0 15px, 15px -15px, -15px 0px;
-            z-index: 1;
-        }
-
-        .main-content::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(244, 162, 97, 0.4) 2px, transparent 2px),
-                radial-gradient(circle at 80% 70%, rgba(233, 196, 106, 0.3) 1px, transparent 1px),
-                radial-gradient(circle at 40% 80%, rgba(231, 111, 81, 0.5) 1.5px, transparent 1.5px);
-            background-size: 40px 40px, 60px 60px, 35px 35px;
-            z-index: 2;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 300px;
-            background: linear-gradient(135deg, #1a5f3f, #2d8659, #1a5f3f);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            z-index: 10;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
-                linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%);
-            background-size: 20px 20px, 20px 20px;
-            background-position: 0 0, 0 10px;
-            z-index: 1;
-        }
-
-        .sidebar-content {
-            position: relative;
-            z-index: 2;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .logo-section {
-            margin-bottom: 3rem;
-        }
-
-        .logo-title {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: bold;
-            line-height: 1.1;
-            margin-bottom: 0.5rem;
-        }
-
-        .youtube-icon {
-            display: inline-block;
-            background: #ff0000;
-            color: white;
-            padding: 0.3rem 0.5rem;
-            border-radius: 4px;
-            font-size: 1.2rem;
-            margin-left: 0.5rem;
-        }
-
-        .red-accent {
-            position: relative;
-            display: inline-block;
-        }
-
-        .red-accent::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
             width: 100%;
-            height: 4px;
-            background: #ff0000;
-            transform: skew(-20deg);
+            z-index: 101;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            padding: 0 2.5rem;
+            box-shadow: 0 2px 12px 0 rgba(26,34,74,0.04);
+            border-bottom: 1px solid #e6e8f0;
         }
-
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav-logo img {
+            height: 38px;
+            width: 38px;
+            object-fit: contain;
+        }
+        .nav-logo-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--jeans);
+            letter-spacing: -1px;
+        }
         .nav-buttons {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: auto;
+            flex-direction: row;
+            gap: 1.1rem;
+            align-items: center;
         }
-
         .nav-btn {
-            background: rgba(255, 255, 255, 0.9);
+            background: transparent;
             border: none;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
+            padding: 0.5rem 1.3rem;
+            border-radius: 1.5rem;
+            font-size: 1.08rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            color: #1a5f3f;
+            color: var(--jeans);
+            transition: background 0.18s, color 0.18s;
+        }
+        .nav-btn.active,
+        .nav-btn:focus {
+            background: var(--jeans-light);
+            color: var(--white);
+        }
+        .nav-btn:hover:not(.active) {
+            background: var(--jeans-lighter);
+            color: var(--white);
         }
 
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 1);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .nav-btn.active {
-            background: rgba(244, 162, 97, 0.9);
-            color: white;
-        }
-
-        .footer-text {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .footer-text .heart {
-            color: #ff6b6b;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            overflow-y: auto;
-            min-height: 100vh;
-        }
-
-        .summarize-card {
-            background: rgba(32, 32, 32, 0.43);
-            border-radius: 32px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(6.2px);
-            -webkit-backdrop-filter: blur(6.2px);
-            border: 1px solid rgba(145, 145, 145, 0.3);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            color: white;
-            position: relative;
-            z-index: 3;
-            /* background: rgba(139, 69, 19, 0.85); */
-            /* backdrop-filter: blur(10px); */
-            /* border-radius: 2rem; */
-            /* padding: 3rem; */
-            /* max-width: 600px; */
-            /* width: 100%; */
-            /* position: relative; */
-            /* z-index: 3; */
-            /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); */
-        }
-
-
-        .quiz-section {
-            margin-top: 1rem;
-        }
-
-        .quiz-question {
-            margin-bottom: 2rem;
-        }
-
-        .question-text {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: black;
-        }
-
-        .quiz-options {
+        /* Hamburger menu */
+        .hamburger {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .quiz-option {
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-        }
-
-        .quiz-option:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 1);
-        }
-
-        .quiz-option.correct {
-            background-color: #2d8659; /* Green theme color */
-            color: white;
-        }
-
-        .quiz-option.wrong {
-            background-color: #e76f51; /* Red theme color */
-            color: white;
-        }
-
-        .feedback-text {
-            margin-top: 0.8rem;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-
-        .card-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .dots {
-            display: flex;
             justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-        }
-
-        .summarize-title {
-            color: white;
-            font-size: 3rem;
-            font-weight: bold;
-            /* margin-bottom: 0.2rem; */
-            position: relative;
-        }
-
-        .wave-decoration {
-            display: inline-block;
-            color: white;
-            font-size: 2rem;
-            margin-left: 1rem;
-        }
-
-        .youtube-link-section {
-            margin-bottom: 2rem;
-        }
-
-        .link-label {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            position: relative;
-            display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-
-        .red-dots {
-            display: flex;
-            gap: 0.3rem;
-        }
-
-        .red-dot {
-            width: 6px;
-            height: 6px;
-            background: #ff0000;
-            border-radius: 50%;
-        }
-
-        .input-container {
-            position: relative;
-            margin-bottom: 1rem;
-        }
-
-        .link-input {
-            width: 100%;
-            padding: 1rem 3rem 1rem 1rem;
+            width: 44px;
+            height: 44px;
+            background: transparent;
             border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            transition: transform ease 0.3s, drop-shadow ease-in 0.5s;
-        }
-
-        .link-input::placeholder {
-            color: #999;
-        }
-
-        .link-input:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .clear-btn {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: #666;
             cursor: pointer;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.2s ease;
+            margin-right: 1.2rem;
+            margin-left: -0.5rem;
+            z-index: 202;
+            transition: background 0.2s;
         }
-
-        .clear-btn:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-
-        .link-submit {
-            background: #2d8659;
-            color: white;
-            padding: 0.5em;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            border-radius: 0.5em;
-            transition: transform ease 0.5s, background-color ease 0.3s, box-shadow ease-in 0.2s;
-        }
-
-        .link-submit:hover {
-            cursor: pointer;
-            background-color: rgb(0, 106, 5);
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            
-        }
-
-        .disclaimer {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        /* Mobile Hamburger */
-        .hamburger {
-            display: none;
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 1000;
-            background: rgba(26, 95, 63, 0.9);
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-        }
-
         .hamburger span {
             display: block;
-            width: 25px;
-            height: 3px;
-            background: white;
-            margin: 5px 0;
-            transition: 0.3s;
+            width: 28px;
+            height: 3.5px;
+            background: var(--jeans);
+            margin: 4px 0;
             border-radius: 2px;
+            transition: 0.3s;
         }
-
         .hamburger.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
+            transform: rotate(-45deg) translate(-6px, 7px);
         }
-
         .hamburger.active span:nth-child(2) {
             opacity: 0;
         }
-
         .hamburger.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
+            transform: rotate(45deg) translate(-6px, -7px);
         }
 
-        /* Mobile Overlay */
-        .mobile-overlay {
-            display: none;
+        /* Hamburger sidebar menu */
+        .sidebar-menu {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 15;
-        }
-
-        /* Mobile Styles */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                transform: translateX(-100%);
-                z-index: 20;
-                width: 280px;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .sidebar-content {
-                padding: 5rem 2rem 2rem;
-                height: 100%;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .main-content {
-                width: 100%;
-                padding: 5rem 1rem 2rem;
-                min-height: 100vh;
-                background: linear-gradient(135deg, #f4a261, #e76f51, #e9c46a, #f4a261);
-            }
-
-            .summarize-card {
-                padding: 2rem;
-                margin: 0;
-            }
-
-            .summarize-title {
-                font-size: 2.2rem;
-            }
-
-            .mobile-overlay.active {
-                display: block;
-            }
-
-            /* Ensure background covers full height on mobile */
-            body {
-                min-height: 100vh;
-                background: linear-gradient(135deg, #f4a261, #e76f51, #e9c46a, #f4a261);
-                background-attachment: fixed;
-            }
-
-            .main-content {
-                background: inherit;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .summarize-card {
-                padding: 1.5rem;
-            }
-
-            .summarize-title {
-                font-size: 1.8rem;
-            }
-
-            .logo-title {
-                font-size: 2rem;
-            }
-        }
-        /* Main content structure */
-        .main-content {
+            height: 100vh;
+            width: 340px;
+            max-width: 92vw;
+            background: var(--white);
+            box-shadow: 2px 0 24px 0 rgba(26,34,74,0.10);
+            z-index: 300;
+            transform: translateX(-100%);
+            transition: transform 0.32s cubic-bezier(.4,0,.2,1);
             display: flex;
             flex-direction: column;
-            height: 100vh;       /* Full viewport height */
+            overflow-y: auto;
+            padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+        }
+        .sidebar-menu.active {
+            transform: translateX(0);
+        }
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--jeans);
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+        }
+        .sidebar-section {
+            margin-bottom: 2.2rem;
+        }
+        .sidebar-section-title {
+            font-size: 1.08rem;
+            font-weight: 600;
+            color: var(--jeans-light);
+            margin-bottom: 0.7rem;
+        }
+        .sidebar-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+        .sidebar-radio-group {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 0.5rem;
+        }
+        .sidebar-radio {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            color: var(--jeans);
+            cursor: pointer;
+        }
+        .sidebar-radio input[type="radio"] {
+            accent-color: var(--jeans-light);
+            width: 1.1em;
+            height: 1.1em;
+        }
+        .sidebar-slider-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .sidebar-slider {
+            flex: 1;
+        }
+        .sidebar-slider input[type="range"] {
             width: 100%;
-            padding: 0;
+            accent-color: var(--jeans-light);
+        }
+        .sidebar-slider-value {
+            min-width: 2.5em;
+            text-align: right;
+            font-size: 1rem;
+            color: var(--jeans-light);
+        }
+        .sidebar-apply-btn {
+            margin-top: 2.5rem;
+            width: 100%;
+            background: var(--jeans-light);
+            color: var(--white);
+            border: none;
+            border-radius: 0.5em;
+            font-size: 1.08rem;
+            font-weight: 600;
+            padding: 0.9em 0;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+        .sidebar-apply-btn:hover {
+            background: var(--jeans-lighter);
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(26,34,74,0.10);
         }
 
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .top-half {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        
-            .summary-half, .quiz-half {
-                width: 100%;
-            }
-        
-            .bottom-half {
-                min-height: 250px;
-                padding: 0.5rem;
-            }
-        
-            .summarize-card {
-                padding: 1rem;
-            }
-        
-            .summarize-title {
-                font-size: 1.8rem;
-            }
-        
-            .quiz-option {
-                font-size: 0.95rem;
-                padding: 0.6rem 0.8rem;
-            }
+        /* Blur overlay when sidebar is open */
+        .blur-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 200;
+            background: var(--blur-bg);
+            backdrop-filter: blur(3.5px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .blur-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .blur-content {
+            filter: none;
+            transition: filter 0.3s;
+        }
+        .blur-content.blurred {
+            filter: blur(3.5px);
         }
 
-        /* Extra-small screens */
-        @media (max-width: 480px) {
-            .summarize-title {
-                font-size: 1.5rem;
-            }
-
-            .quiz-option {
-                font-size: 0.9rem;
-                padding: 0.5rem 0.7rem;
-            }
-        }
-
-                /* Main container: 3-column grid */
+        /* Main content structure */
         .container {
             display: grid;
-            grid-template-columns: 300px 2fr 1.2fr; /* Sidebar / Middle / Right */
-            height: 100vh;
-            width: 100%;
+            grid-template-columns: 1fr 2fr 1.2fr;
+            height: calc(100vh - 64px);
+            width: 100vw;
+            margin-top: 0;
         }
-
-        /* Sidebar */
-        .sidebar {
-            background: linear-gradient(135deg, #1a5f3f, #2d8659);
-            display: flex;
-            flex-direction: column;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        /* Middle column: video + summary */
         .middle-column {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            padding: 1rem;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
             overflow-y: auto;
         }
-
         .video-container {
             flex: 2;
             border-radius: 1rem;
             overflow: hidden;
             background: black;
+            min-height: 240px;
         }
-
         .summary-container {
             flex: 1;
+            min-height: 0;
+            max-height: 100%;
             overflow-y: auto;
-        }
-
-        .summarize-card {
-            background: rgba(32, 32, 32, 0.5);
-            border-radius: 1rem;
-            padding: 1rem;
-            color: white;
-            height: 100%;
+            overflow-x: hidden;
+            width: 100%;
             display: flex;
             flex-direction: column;
         }
-
-        /* Right column: tools + quiz */
+        #summary-text {
+            word-break: break-word;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+            max-width: 100%;
+        }
+        .summarize-card {
+            background: var(--jeans-light);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            color: var(--white);
+            max-height: 100%;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 12px 0 rgba(26,34,74,0.04);
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .summarize-title {
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: bold;
+            position: relative;
+        }
         .right-column {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            padding: 1rem;
-            background: #f9f9f9;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            background: var(--card-bg);
             overflow-y: auto;
         }
-
         .tools-bar {
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
-
         .tool-btn {
             flex: 1;
             padding: 0.5rem 0.8rem;
             border-radius: 0.5rem;
             border: none;
-            background: #000;
-            color: white;
+            background: var(--jeans);
+            color: var(--white);
             font-weight: bold;
             cursor: pointer;
-            transition: box-shadow ease 0.4s;
+            transition: box-shadow ease 0.4s, background 0.2s;
         }
-
         .tool-btn:hover {
-            box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.7)
+            box-shadow: 2px 2px 20px rgba(26,34,74,0.13);
+            background: var(--jeans-light);
         }
-
         .quiz-container {
             flex: 1;
             overflow-y: auto;
         }
-
-        /* Quiz option buttons */
+        .quiz-section {
+            margin-top: 1rem;
+        }
+        .quiz-question {
+            margin-bottom: 2rem;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--jeans);
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
         .quiz-option {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--white);
             border: none;
             padding: 0.6rem 0.8rem;
             border-radius: 10px;
             cursor: pointer;
             margin-bottom: 0.5rem;
+            font-size: 1rem;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            color: var(--jeans);
         }
-
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            background: var(--jeans-light);
+            color: var(--white);
+        }
         .quiz-option.correct {
-            background-color: #2d8659; /* green */
+            background-color: #2d8659;
             color: white;
         }
-
         .quiz-option.wrong {
-            background-color: #e76f51; /* red */
+            background-color: #e76f51;
             color: white;
         }
-
         .feedback-text {
             margin-top: 0.5rem;
             font-weight: bold;
         }
-
         /* Responsive for mobile/tablet */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .container {
-                grid-template-columns: 1fr; /* stack columns vertically */
+                grid-template-columns: 1fr;
                 grid-template-rows: auto;
             }
             .middle-column, .right-column {
@@ -682,167 +384,193 @@
             .video-container {
                 height: 200px;
             }
+            .sidebar-menu { width: 90vw; max-width: 98vw; }
         }
-
-        /* Full-page loading overlay */
-        #loading-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            z-index: 9999;
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            .middle-column, .right-column { padding: 1rem; }
+            .sidebar-menu { width: 99vw; max-width: 99vw; padding: 1.2rem 0.7rem; }
         }
-        /* Spinner animation */
-        .spinner {
-            border: 4px solid #ddd;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px; height: 40px;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
+        @media (max-width: 600px) {
+            .summarize-title { font-size: 1.3rem; }
+            .sidebar-menu { width: 99vw; max-width: 99vw; padding: 1.2rem 0.7rem; }
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
     </style>
 </head>
 <body>
-    <div id="loading-overlay">
-        <div class="spinner"></div> Generating summary...
-    </div>
-    <div class="container" id="container" style="display:none;">
-        <!-- Mobile Hamburger -->
-        <button class="hamburger" id="hamburger">
+    <div class="blur-overlay" id="blurOverlay"></div>
+    <nav class="nav-bar">
+        <button class="hamburger" id="hamburger" aria-label="Open parameters menu">
             <span></span>
             <span></span>
             <span></span>
         </button>
-
-        <!-- Mobile Overlay -->
-        <div class="mobile-overlay" id="mobileOverlay"></div>
-
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-content">
-                <div class="logo-section">
-                    <div class="logo-title">
-                        <span >YouTube</span><br>
-                        Video<span class="youtube-icon">▶</span><br>
-                        Summary
-                    </div>
-                    <img src="{{ url_for('static', path='images/stroke_ultimatos.png') }}" alt="brush stroke" height="30" />
-                </div>
-
-                <div class="nav-buttons">
-                    <button class="nav-btn" onclick="navigateTo('{{ url_for('landing_view') }}')">Home</button>
-                    <button class="nav-btn active" onclick="navigateTo('{{ url_for('app_view') }}')">App</button>
-
-                    <button class="nav-btn" onclick="navigateTo('login')">Login</button>
-                </div>
-
-                <div class="footer-text">
-                    developed with <span class="heart">❤️</span><br>
-                    <span style="opacity: 0.6;">© 2025 AI hackathon</span>
-                </div>
+        <div class="nav-logo">
+            <img src="{{ url_for('static', path='images/actualIcon.png') }}" alt="Logo" />
+            <span class="nav-logo-title">YouTube Video Summary</span>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="navigateTo('{{ url_for('landing_view') }}')">Home</button>
+            <button class="nav-btn active" onclick="navigateTo('{{ url_for('app_view') }}')">App</button>
+            <button class="nav-btn" onclick="navigateTo('login')">Login</button>
+        </div>
+    </nav>
+    <aside class="sidebar-menu" id="sidebarMenu" tabindex="-1">
+        <div class="sidebar-title">Parameters</div>
+        <!-- Tone Section -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Tone</div>
+            <div class="sidebar-radio-group sidebar-options">
+                <label class="sidebar-radio">
+                    <input type="radio" name="tone" value="balanced" checked>
+                    Balanced
+                </label>
+                <label class="sidebar-radio">
+                    <input type="radio" name="tone" value="professional">
+                    Professional
+                </label>
+                <label class="sidebar-radio">
+                    <input type="radio" name="tone" value="playful">
+                    Playful
+                </label>
+            </div>
+            <div style="font-size:0.97em; color:#888; margin-top:0.5em;">
+                <b>Playful:</b> Generate playful replies.<br>
+                <b>Professional:</b> Academia/jargon-heavy.<br>
+                <b>Balanced:</b> Mix of both.
             </div>
         </div>
-
-        <!-- Middle column: Video + Summary -->
-        <div class="middle-column">
-            <div class="video-container">
-                <iframe width="100%" height="100%" src="{{embed_link}}" 
-                    class="video-iframe"
-                    title="YouTube video player" frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>
-            </div>
-
-            <div class="summary-container">
-                <div class="summarize-card">
-                    <div class="card-header">
-                        <h1 class="summarize-title">Summary</h1>
-                    </div>
-                    <div id="summary-text" style="color:white;">Summary content goes here...</div>
+        <!-- Temperature Section -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Temperature</div>
+            <div class="sidebar-slider-group">
+                <div class="sidebar-slider">
+                    <input type="range" id="temperatureSlider" min="0" max="2" step="0.01" value="1">
                 </div>
+                <span class="sidebar-slider-value" id="temperatureValue">1.00</span>
+            </div>
+            <div style="font-size:0.97em; color:#888; margin-top:0.5em;">
+                Controls randomness of model output. (<= 1 : factual; > 1 : random inferences)
             </div>
         </div>
-
-        <!-- Right column: Quiz + Tools -->
-        <div class="right-column">
-            <div class="tools-bar">
-                <button class="tool-btn">Flashcards</button>
-                <button class="tool-btn">Quizzes</button>
-                <button class="tool-btn">Notes</button>
+        <button class="sidebar-apply-btn" id="applyParamsBtn">Apply</button>
+    </aside>
+    <div class="blur-content" id="blurContent">
+        <div class="container" id="container" style="display:none;">
+            <!-- Middle column: Video + Summary -->
+            <div class="middle-column">
+                <div class="video-container">
+                    <iframe width="100%" height="100%" src="{{embed_link}}" 
+                        class="video-iframe"
+                        title="YouTube video player" frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen></iframe>
+                </div>
+                <div class="summary-container">
+                    <div class="summarize-card">
+                        <div class="card-header">
+                            <h1 class="summarize-title">Summary</h1>
+                        </div>
+                        <div id="summary-text" style="color:white;">Summary content goes here...</div>
+                    </div>
+                </div>
             </div>
-
-            <div class="quiz-container">
-                <div class="quiz-section">
+            <!-- Right column: Quiz + Tools -->
+            <div class="right-column">
+                <div class="tools-bar">
+                    <button class="tool-btn">Flashcards</button>
+                    <button class="tool-btn">Quizzes</button>
+                    <button class="tool-btn">Notes</button>
+                </div>
+                <div class="quiz-container">
+                    <div class="quiz-section"></div>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
+        // Hamburger menu logic
+        const hamburger = document.getElementById('hamburger');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const blurOverlay = document.getElementById('blurOverlay');
+        const blurContent = document.getElementById('blurContent');
+        let sidebarOpen = false;
+
+        function openSidebar() {
+            sidebarMenu.classList.add('active');
+            blurOverlay.classList.add('active');
+            blurContent.classList.add('blurred');
+            hamburger.classList.add('active');
+            sidebarOpen = true;
+            sidebarMenu.focus();
+        }
+        function closeSidebar() {
+            sidebarMenu.classList.remove('active');
+            blurOverlay.classList.remove('active');
+            blurContent.classList.remove('blurred');
+            hamburger.classList.remove('active');
+            sidebarOpen = false;
+        }
+        hamburger.addEventListener('mouseenter', openSidebar);
+        hamburger.addEventListener('click', openSidebar);
+        blurOverlay.addEventListener('click', closeSidebar);
+        sidebarMenu.addEventListener('mouseleave', function(e) {
+            if (e.clientX < sidebarMenu.getBoundingClientRect().left + 10) {
+                closeSidebar();
+            }
+        });
+        sidebarMenu.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") closeSidebar();
+        });
+
+        // Temperature slider update
+        const tempSlider = document.getElementById('temperatureSlider');
+        const tempValue = document.getElementById('temperatureValue');
+        tempSlider.addEventListener('input', function() {
+            tempValue.textContent = Number(tempSlider.value).toFixed(2);
+        });
+
+        // Apply button (for demonstration)
+        document.getElementById('applyParamsBtn').addEventListener('click', function() {
+            closeSidebar();
+            // Here you would collect and apply the parameters as needed
+        });
+
+        // Optional: close sidebar on resize for mobile
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 700 && sidebarOpen) closeSidebar();
+        });
+
         // Fetching content from api endpoints
         async function loadSummary() {
             try {
-                const res = await fetch("/app/summary-data"); // <-- Separate endpoint for data
+                const res = await fetch("/app/summary-data");
                 const data = await res.json();
-                
-                document.getElementById("loading-overlay").style.display = "none";
-                
                 document.getElementById("container").style.display = "grid";
-                document.getElementById("container").style.gridTemplateColumns = "300px 2fr 1.2fr"
-                document.getElementById("container").style.height = "100vh";
-                document.getElementById("container").style.width = "100%";
-
                 document.querySelector(".video-iframe").src = data.embed_link;
-
                 document.getElementById("summary-text").innerHTML = data.summary;
-                console.log(data.summary);
-
                 const quizSection = document.querySelector(".quiz-section");
-                
                 for (const item of data.questions) {
-                    // Create parent div
                     const quizQuestion = document.createElement("div");
                     quizQuestion.className = "quiz-question";
-                    // Create question text
                     const questionText = document.createElement("p");
                     questionText.className = "question-text";
                     questionText.textContent = "Q. " + item.question;
                     quizQuestion.appendChild(questionText);
-
                     const quizAnswer = item.answer;
-
-                    // Create quiz-options container
                     const quizOptions = document.createElement("div");
-                    
                     quizOptions.className = "quiz-options";
-
-                    // Function to create a button option
                     function createOption(text, isCorrect) {
                         const btn = document.createElement("button");
                         btn.className = "quiz-option";
                         btn.setAttribute("data-correct", isCorrect);
                         btn.textContent = text;
-
-                        // Attach click event immediately
                         btn.addEventListener('click', function () {
                             const parent = btn.closest('.quiz-question');
                             const feedback = parent.querySelector('.feedback-text');
-                        
-                            // Reset all buttons
                             parent.querySelectorAll('.quiz-option').forEach(b => {
                                 b.classList.remove('correct', 'wrong');
                             });
-                        
                             if (btn.dataset.correct === "true") {
                                 btn.classList.add('correct');
                                 feedback.textContent = "✅ Correct!";
@@ -853,60 +581,29 @@
                                 feedback.style.color = "#e76f51";
                             }
                         });
-                    
                         return btn;
                     }
-                    
-                    console.log(item.answer_choices);
-
-                    // Add the four options
                     for (const option of item.answer_choices) {
-                        console.log(option)
                         if (option == quizAnswer) {
                             quizOptions.appendChild(createOption(option, "true"));
                         } else {
                             quizOptions.appendChild(createOption(option, "false"));
                         }
                     }
-
                     quizQuestion.appendChild(quizOptions);
-
-                    // Create feedback text
                     const feedbackText = document.createElement("p");
                     feedbackText.className = "feedback-text";
                     quizQuestion.appendChild(feedbackText);
-
                     quizSection.appendChild(quizQuestion);
                 }
-
             } catch (err) {
-                document.getElementById("loading-overlay").textContent = "Error loading summary.";
+                document.getElementById("container").innerHTML = "Error loading summary.";
             }
         }
-
-        // Run when page loads
         loadSummary();
-
-        // Mobile Navigation
-        const hamburger = document.getElementById('hamburger');
-        const sidebar = document.getElementById('sidebar');
-        const mobileOverlay = document.getElementById('mobileOverlay');
-
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            sidebar.classList.toggle('active');
-            mobileOverlay.classList.toggle('active');
-        });
-
-        mobileOverlay.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            sidebar.classList.remove('active');
-            mobileOverlay.classList.remove('active');
-        });
 
         // Navigation Functions
         function navigateTo(page) {
-            console.log(`Navigating to ${page}`);
             window.location.href=page;
             // Close mobile menu if open
             hamburger.classList.remove('active');

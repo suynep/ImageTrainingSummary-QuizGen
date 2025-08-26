@@ -12,6 +12,7 @@ from helpers import validate_link
 from llm import generate_custom_json, fetch_transcript_text
 from uuid import uuid4
 import markdown
+from pdf_generator import generate_quiz_pdf
 
 app = FastAPI()
 SECRET_KEY = "5a04ed44-ca47-4e07-a499-46c8886b618d"  # Change in prod
@@ -66,19 +67,27 @@ async def summary_data(request: Request):
 
         questions = json.loads(llm_res['candidates'][0]['content']['parts'][0]['text'])['questions']
         summary = json.loads(llm_res['candidates'][0]['content']['parts'][0]['text'])['summary']
+        flashcards = json.loads(llm_res['candidates'][0]['content']['parts'][0]['text'])['flashcards']
 
-        insert_one_to_db({"embed_link": embed_link, "questions": questions, "summary": summary, "_id": video_id})
+        insert_one_to_db({"embed_link": embed_link, "questions": questions, "summary": summary, "_id": video_id, "flashcards": flashcards})
+
+        generate_quiz_pdf(questions)
+
 
         # Return JSON instead of HTML
         print(markdown.markdown(summary))
-        return {"embed_link": embed_link, "questions": questions, "summary": markdown.markdown(summary)}
+        return {"embed_link": embed_link, "questions": questions, "summary": markdown.markdown(summary), "flashcards": flashcards}
     else:
         data = {
             "embed_link": res['embed_link'], 
             "questions": res['questions'], 
             "summary": markdown.markdown(res['summary']), 
             "_id": res['_id'],
+            "flashcards": res['flashcards'],
         }
+
+        print(data['questions'])
+        generate_quiz_pdf(data['questions'])
         return data 
 
 
